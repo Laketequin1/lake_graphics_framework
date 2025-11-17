@@ -5,12 +5,14 @@ console and saving to a designated log file.
 Logs messages to a timestamped log file under the "logs/" folder.
 """
 
-### Imports ###
+
 import os
+
 from datetime import datetime
 from typing import Literal, NoReturn
 
-### Functions ###
+
+
 class MessageLogger:
     """
     Used for debugging purposes during production. When initialized, set
@@ -27,10 +29,11 @@ class MessageLogger:
     - INFO:     Prints all message levels.                  (logs all)
     - DEV:      Prints all message levels and dev notes.    (logs all)    
     """
-    # Constants
     _LOG_FOLDER = "logs/"
     _LOG_FILENAME = datetime.now().strftime("%Y-%m-%d_%H.%M.%S") + ".log"
     _LOG_FILEPATH = _LOG_FOLDER + _LOG_FILENAME
+
+    _ERROR_IF_NOT_INITIATED = True
 
     _VERBOSITY_PRIORITYS = {
         "NONE":     0,  # Everything completely ignored
@@ -69,8 +72,6 @@ class MessageLogger:
         "Have fun <3\n"
     )
     _PREFIX_SPACE_PADDING = 7
-
-    _ERROR_IF_NOT_INITIATED = True
 
     # Verbose unset
     _verbosity_priority = -1
@@ -280,10 +281,10 @@ class MessageLogger:
             str: The styled message.
         """
         styled_message = (
-                cls._TEXT_STYLES[style] +
-                str(message) +
-                cls._TEXT_STYLES["CLEAR"]
-            )
+            cls._TEXT_STYLES[style] +
+            str(message) +
+            cls._TEXT_STYLES["CLEAR"]
+        )
         return styled_message
 
     @classmethod
@@ -306,10 +307,10 @@ class MessageLogger:
         new_line_occurances = message.count("\n")
         new_line_padding = "\n" + " "*(1+8+2+cls._PREFIX_SPACE_PADDING) + " : "
         padded_message = str(message).replace(
-                                                        "\n",
-                                                        new_line_padding,
-                                                        new_line_occurances
-                                                        )
+                            "\n",
+                            new_line_padding,
+                            new_line_occurances
+                        )
 
         formatted_message = f"[{time}] {padded_prefix} : {str(padded_message)}"
         return formatted_message
