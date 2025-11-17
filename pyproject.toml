@@ -1,5 +1,5 @@
 [project]
-name = "lake_graphics_framework"
+name = "lake-graphics-framework"
 description = "A python 3D library using OpenGL and glfw as backend"
 
 readme = "README.md"
@@ -21,6 +21,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+keywords = ["python", "3D", "graphics", "opengl", "glfw", "linux", "windows"]
 
 requires-python = ">= 3.12"
 
