@@ -1,1 +1,45 @@
-# TODO :)
+[project]
+name = "lake_graphics_framework"
+description = "A python 3D library using OpenGL and glfw as backend"
+
+readme = "README.md"
+
+authors = [
+    {name = "Tequin Lake", email = "laketequin@gmail.com"},
+]
+
+license = "MIT License"
+
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+requires-python = ">= 3.12"
+
+dependencies = [
+    "glfw",
+    "numpy",
+    "pyrr",
+    "PyOpenGL",
+    "Pillow"
+]
+
+dynamic = ["version"]
+
+[project.urls]
+"TODO" = "https://github.com/Laketequin1/lake_graphics_framework"
+
+[tool.setuptools.dynamic]
+version.attr = "pkgsample.__version__"
+
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"

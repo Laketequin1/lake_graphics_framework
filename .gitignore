@@ -1,5 +1,11 @@
 .vscode/
 .cache/
-build/
 env/
 .venv/
+
+*.pyc
+*.pyo
+
+*.egg-info/
+build/
+dist/
