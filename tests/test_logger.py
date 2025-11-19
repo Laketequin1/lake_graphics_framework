@@ -18,9 +18,10 @@ def main():
     """
     # Initialize the logger with a specific verbosity level
     verbose_level = "DEV"  # "NONE", "LOG_ONLY", "ERROR", "WARNING", "CRUCIAL", "INFO", or "DEV"
+    log_folder = "logs/"
 
     # Initialize the MessageLogger with the specified verbose level
-    MessageLogger.init(verbose_level)
+    MessageLogger.init(verbose_level, log_folder)
 
     # Log different types of messages to demonstrate functionality
     MessageLogger.error("This is an error message.")

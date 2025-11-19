@@ -29,10 +29,6 @@ class MessageLogger:
     - INFO:     Prints all message levels.                  (logs all)
     - DEV:      Prints all message levels and dev notes.    (logs all)    
     """
-    _LOG_FOLDER = "logs/"
-    _LOG_FILENAME = datetime.now().strftime("%Y-%m-%d_%H.%M.%S") + ".log"
-    _LOG_FILEPATH = _LOG_FOLDER + _LOG_FILENAME
-
     _ERROR_IF_NOT_INITIATED = True
 
     _VERBOSITY_PRIORITYS = {
@@ -78,7 +74,7 @@ class MessageLogger:
     _logs: list[str] = []
 
     @classmethod
-    def init(cls, verbosity: _VerbosityLiteral) -> None:
+    def init(cls, verbosity: _VerbosityLiteral, log_folder: str) -> None:
         """
         Initializes a MessageLogger instance with a specified verbose level.
         Will throw a ValueError if verbose level is invalid.
@@ -94,6 +90,7 @@ class MessageLogger:
                 - DEV:      Prints all message levels and dev notes.   (logs all)
         """
         cls.set_verbose_type(verbosity)
+        cls._set_log_paths(log_folder)
         cls._logs = []
 
         date_time = datetime.now().strftime("%d/%m/%Y at %H:%M:%S")
@@ -106,6 +103,21 @@ class MessageLogger:
         cls._setup_log_file(setup_message)
 
     @classmethod
+    def _set_log_paths(cls, log_folder: str) -> None:
+        """
+        [Private]
+        Sets the path of the log folder, and log file.
+
+        Parameters:
+            log_folder (str): Logs folder path.
+        """
+        cls._log_folder = log_folder
+
+        formatted_datetime = datetime.now().strftime("%Y-%m-%d_%H.%M.%S")
+        cls._log_filename = formatted_datetime + ".log"
+        cls._log_filepath = cls._log_folder + cls._log_filename
+
+    @classmethod
     def _setup_log_file(cls, setup_message: str) -> None:
         """
         [Private]
@@ -116,9 +128,9 @@ class MessageLogger:
             setup_message (str): The message to write at the beginning
                                  of the log file.
         """
-        os.makedirs(cls._LOG_FOLDER, exist_ok=True)
+        os.makedirs(cls._log_folder, exist_ok=True)
 
-        with open(cls._LOG_FILEPATH, "w", encoding="utf-8") as log_file:
+        with open(cls._log_filepath, "w", encoding="utf-8") as log_file:
             log_file.write(setup_message + "\n")
 
     @classmethod
@@ -324,7 +336,7 @@ class MessageLogger:
         Parameters:
             message (str): The message to be written to the log file.
         """
-        with open(cls._LOG_FILEPATH, "a", encoding="utf-8") as log_file:
+        with open(cls._log_filepath, "a", encoding="utf-8") as log_file:
             log_file.write(str(message) + "\n")
 
     @classmethod
