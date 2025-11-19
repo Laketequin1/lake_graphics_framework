@@ -4,12 +4,12 @@ Example usage for the logger feature.
 
 
 try:
-    from src.lake_graphics_framework.message_logger import MessageLogger
+    from src.lake_graphics_framework._message_logger import MessageLogger
 except ImportError:
     import os
     import sys
     sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-    from src.lake_graphics_framework.message_logger import MessageLogger
+    from src.lake_graphics_framework._message_logger import MessageLogger
 
 
 def main():
