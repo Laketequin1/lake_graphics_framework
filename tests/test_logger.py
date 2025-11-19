@@ -1,5 +1,5 @@
 """
-Tests for the logger feature.
+Example usage for the logger feature.
 """
 
 
@@ -39,6 +39,7 @@ def main():
     # Nothing gets logged, nothing written to file.
     MessageLogger.set_verbose_type("NONE")
     MessageLogger.error("This error won't print and won't write to the log file :)")
+
 
 if __name__ == "__main__":
     main()

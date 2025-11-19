@@ -9,7 +9,7 @@ camera.apply_shader(shader) [Can be reverted with camera.default_shader()]
 
 geometry = BoxGeometry((1, 1, 1))     <-     inherit from BaseObject3D
 material = MeshBasicMaterial({"color": (200, 150, 150)})
-cube = Mesh(geometry, material)
+cube = Object(Mesh(geometry, material))
 cube.move_to((1, 0, 0)) [Moves cube relative to default position. All transformations must be rememebered for children]
 scene.add(cube) [Cube 1 unit above origin. Also give the cube a UUID - Possibly important for later!]
 cube.move((2, 0, 0)) [Different to move_to]
@@ -18,7 +18,7 @@ object = EmptyObject()
 scene.add(object) [Same as cube, but no mesh - however things can be added under it as children, where moving the object moves the children]
 
 geometry = SphereGeometry( some settings )
-sphere = Mesh(geometry, material) [Re-using and sharing material from eariler]
+sphere = Object(Mesh(geometry, material)) [Re-using and sharing material from eariler]
 sphere.set_name("Boo!")
 sphere.set_interpolation_method(None) [Don't interpolate for this sphere only]
 cube.add(sphere) [child of cube, inherit transformations, past and future. Add option instead lock pos/rotation in world axis. By default adds sphere to center of parent.]
