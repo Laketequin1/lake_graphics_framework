@@ -2,10 +2,18 @@
 Globally accessable types throughout lake graphics framework.
 """
 
-
+# pylint: disable=unused-import
 from collections.abc import Sequence # type: ignore
 from numbers import Real # type: ignore
-from typing import NewType, Tuple, Literal, Any, NoReturn, Optional, Union # type: ignore
+from typing import (
+    NewType, # type: ignore
+    Tuple,
+    Literal,
+    Any, # type: ignore
+    NoReturn, # type: ignore
+    Optional, # type: ignore
+    Union # type: ignore
+)
 from typing import get_origin, get_args # type: ignore
 
 
