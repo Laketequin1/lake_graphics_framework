@@ -8,9 +8,12 @@ Logs messages to a timestamped log file under the "logs/" folder.
 
 import os
 
+
 from datetime import datetime
 from typing import Literal, NoReturn
 
+
+from .._src._global_exceptions import CustomErrors
 
 
 class MessageLogger:
@@ -147,7 +150,9 @@ class MessageLogger:
 
     @classmethod
     def error(
-            cls, message: str, exception: Exception | None = None
+            cls,
+            message: str,
+            exception: type[CustomErrors] | Exception | None = None
         ) -> None:
         """
         Logs an error message to the file and prints to the terminal
