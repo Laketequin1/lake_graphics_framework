@@ -6,8 +6,8 @@ event processing, and delegates rendering tasks to a GraphicsEngine.
 """
 
 
-from .._src._global_type_hinting import Size, PositiveInt
-#from .._src.
+from .._src._global_type_hinting import Size, PositiveInt, Optional
+from .._variable_validation import validate_types
 
 
 class Window:
@@ -24,7 +24,7 @@ class Window:
         fullscreen: bool = False,
         resizable: bool = False,
         borderless: bool = False,
-        max_fps: None | PositiveInt = None,
+        max_fps: Optional[PositiveInt] = None,
         vsync: bool = True
     ) -> None:
         """
@@ -41,10 +41,20 @@ class Window:
                 Defaults to True.
             borderless (bool): Whether the window has a border.
                 Defaults to False.
-            max_fps (None | PositiveInt): Uncapped fps if None,
+            max_fps (Optional[PositiveInt]): Uncapped fps if None,
                 otherwise frames per second can't exceed max_fps.
                 Defaults to None.
             vsync (bool): Whether to enable vsync.
                 Defaults to True.
         """
-        pass
+        validate_types(
+            [
+                ('size', size, Size),
+                ('caption', caption, str),
+                ('fullscreen', fullscreen, bool),
+                ('resizable', resizable, bool),
+                ('borderless', borderless, bool),
+                ('max_fps', max_fps, Optional[PositiveInt]),
+                ('vsync', vsync, bool)
+            ]
+        )

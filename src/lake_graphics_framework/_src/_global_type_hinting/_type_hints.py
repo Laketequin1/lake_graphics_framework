@@ -5,7 +5,8 @@ Globally accessable types throughout lake graphics framework.
 
 from collections.abc import Sequence # type: ignore
 from numbers import Real # type: ignore
-from typing import NewType, Tuple, Literal, Any, NoReturn # type: ignore
+from typing import NewType, Tuple, Literal, Any, NoReturn, Optional, Union # type: ignore
+from typing import get_origin, get_args # type: ignore
 
 
 PositiveInt = int

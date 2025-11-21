@@ -6,6 +6,9 @@ lake_graphics_framework functions.
 """
 
 
+import types
+
+
 from .._src._global_type_hinting import (
     Any,
     NoReturn,
@@ -15,12 +18,14 @@ from .._src._global_type_hinting import (
     Coordinate,
     Size,
     AnyString,
-    ColorRGBA
+    ColorRGBA,
+    Union
 )
+from .._src._global_type_hinting import get_origin, get_args
 
 
 def validate_types(
-        expected_types: list[tuple[str, Any, type]]
+        expected_types: list[tuple[str, Any, Any]]
     ) -> None | NoReturn:
     """
     Validate variables against their expected types. Raises a TypeError
@@ -41,21 +46,64 @@ def validate_types(
 def validate_type(
         name: str,
         var: Any,
-        expected_type: type
+        expected_type: Any
     ) -> None | NoReturn:
     """
-    Validate variables against their expected types. Raises a TypeError
+    Validate a variable against its expected type(s). Raises a TypeError
     or ValueError if validation fails.
 
     Parameters:
         name (str): The name of the variable being validated.
         var (Any): The variable to be validated.
-        expected_type (type): The expected type for the variable.
+        expected_type (type): The expected type(s) for the variable.
+            May be of type Union.
 
     Raises:
         TypeError: If all components don't match types.
         ValueError: If the value doesn't conform to the correct range.
     """
+    origin = get_origin(expected_type)
+
+    if origin is Union or origin is types.UnionType:
+        possible_types = get_args(expected_type)
+
+        if var is None:
+            if not type(None) in possible_types:
+                raise TypeError(
+                    f"Invalid type for {name}, can't be None. "
+                    f"Expected {expected_type}, got {type(var)}."
+                )
+            return  # Validation success
+
+        value_errors: list[str] = []
+
+        for t in possible_types:
+            if t is type(None):
+                continue # Ignore, already handled
+
+            try:
+                validate_type(name, var, t) # Recursive check
+                return  # The tested type matched, validation success
+            except TypeError:
+                continue # Type didn't match, try next type
+            except ValueError as e:
+                value_errors.append(str(e))
+                continue # Value didn't match, try next type
+
+        # Finished loop, nothing matched
+        if len(value_errors) == 0:
+            raise TypeError(
+                f"Invalid type for {name}. Expected one of {possible_types}, "
+                f"got {type(var)}."
+            )
+
+        formatted_errors = "\n  - ".join(value_errors)
+        raise ValueError(
+            f"{name} of type {type(var)} in {possible_types}, "
+            f"no type conformed to expected value. "
+            f"\nValidation value failures:\n  - {formatted_errors}"
+        )
+
     if expected_type is PositiveInt:
         _validate_positiveint(name, var)
         return # Validation success
