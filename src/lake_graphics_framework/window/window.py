@@ -6,7 +6,8 @@ event processing, and delegates rendering tasks to a GraphicsEngine.
 """
 
 
-from .._src._global_type_hinting import Size
+from .._src._global_type_hinting import Size, PositiveInt
+#from .._src.
 
 
 class Window:
@@ -23,7 +24,7 @@ class Window:
         fullscreen: bool = False,
         resizable: bool = False,
         borderless: bool = False,
-        target_fps: None | int = None,
+        max_fps: None | PositiveInt = None,
         vsync: bool = True
     ) -> None:
         """
@@ -40,8 +41,8 @@ class Window:
                 Defaults to True.
             borderless (bool): Whether the window has a border.
                 Defaults to False.
-            target_fps (None | int): Uncapped fps if None, otherwise
-                frames per second can't exceed target_fps.
+            max_fps (None | PositiveInt): Uncapped fps if None,
+                otherwise frames per second can't exceed max_fps.
                 Defaults to None.
             vsync (bool): Whether to enable vsync.
                 Defaults to True.
