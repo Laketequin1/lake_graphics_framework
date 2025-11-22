@@ -5,9 +5,8 @@ Handles GLFW initialization, window creation, input setup,
 event processing, and delegates rendering tasks to a GraphicsEngine.
 """
 
-
+import sys
 from uuid import uuid4 as uuid
-from threading import Lock, Event
 
 
 import glfw # type: ignore
@@ -61,8 +60,8 @@ class Window:
             vsync (bool): Whether to enable vsync. Overrides max_fps.
                 Defaults to True.
         """
-        self.uuid = uuid()
-        log.info(f"Creating window {self.uuid}.")
+        self._uuid = uuid()
+        log.info(f"Creating window {self._uuid}.")
 
         validate_types(
             [
@@ -76,54 +75,49 @@ class Window:
             ]
         )
 
-        self.size = size
-        self.caption = caption
-        self.fullscreen = fullscreen
-        self.resizable = resizable
-        self.borderless = borderless
-        self.max_fps = max_fps
-        self.vsync = vsync
+        self._size = size
+        self._caption = caption
+        self._fullscreen = fullscreen
+        self._resizable = resizable
+        self._borderless = borderless
+        self._max_fps = max_fps
+        self._vsync = vsync
 
         log.info(
-            f"Window {self.uuid}: Variable validation passed. "
+            f"Window {self._uuid}: Variable validation passed. "
             f"Variables: {self.__dict__}"
         )
 
-        # Set variables
-        self.requesting_close = False
-        self.should_close_event = Event()
-        self.lock = Lock()
-
-        self.monitor, self.video_mode = self._init_display()
+        self._monitor, self._video_mode = self._init_display()
         log.dev("TODO: Allow monitor selection for window.")
 
-        self.display_size = self.video_mode.size
-        log.info(f"Window {self.uuid}: Display size {self.display_size}")
+        self._display_size = self._video_mode.size
+        log.info(f"Window {self._uuid}: Display size {self._display_size}")
 
         self._enforce_fullscreen_constraints()
 
-        if self.size[1] != 0:
-            self.aspect_ratio = self.size[0] / self.size[1]
+        if self._size[1] != 0:
+            self._aspect_ratio = self._size[0] / self._size[1]
             log.info(
-                f"Window {self.uuid}: Aspect ratio of {self.aspect_ratio}."
+                f"Window {self._uuid}: Aspect ratio of {self._aspect_ratio}."
             )
         else:
             log.warn(
-                f"Window {self.uuid}: height of 0... rightttt. "
+                f"Window {self._uuid}: height of 0... rightttt. "
                 "Assuming an aspect ratio of 1."
             )
-            self.aspect_ratio = 1
+            self._aspect_ratio = 1
 
-        self.window = self._init_window(
-            self.monitor,
-            self.size,
-            self.caption,
-            self.fullscreen,
-            self.vsync
+        self._window = self._init_window(
+            self._monitor,
+            self._size,
+            self._caption,
+            self._fullscreen,
+            self._vsync
         )
 
         log.info(
-            f"Window creation passed for {self.uuid}. "
+            f"Window creation passed for {self._uuid}. "
             f"New Variables: {self.__dict__}"
         )
 
@@ -135,27 +129,27 @@ class Window:
         """
         log.dev("TODO: Verify resizable & borderless functionality.")
 
-        if not self.fullscreen:
+        if not self._fullscreen:
             return
 
-        if self.resizable:
-            self.resizable = False
+        if self._resizable:
+            self._resizable = False
             log.warn(
-                f"Window {self.uuid}: 'resizable' disabled "
+                f"Window {self._uuid}: 'resizable' disabled "
                 "due to fullscreen mode."
             )
 
-        if self.borderless:
-            self.borderless = False
+        if self._borderless:
+            self._borderless = False
             log.warn(
-                f"Window {self.uuid}: 'borderless' ignored "
+                f"Window {self._uuid}: 'borderless' ignored "
                 "due to fullscreen mode."
             )
 
-        self.size = self.display_size
+        self._size = self._display_size
         log.info(
-            f"Window {self.uuid}: Fullscreen, "
-            f"updated size from {self.size} to {self.display_size}."
+            f"Window {self._uuid}: Fullscreen, "
+            f"updated size from {self._size} to {self._display_size}."
         )
 
     @staticmethod
@@ -267,7 +261,7 @@ class Window:
                 used for positioning.
             size (Size): The dimensions of the window (width, height).
         """
-        log.info(f"Centering window {self.uuid}.")
+        log.info(f"Centering window {self._uuid}.")
 
         x, y, width, height = glfw.get_monitor_workarea(monitor) # type: ignore
 
@@ -299,7 +293,26 @@ class Window:
         validate_type("swap_interval", swap_interval, int)
 
         log.info(
-            f"Window {self.uuid}: "
+            f"Window {self._uuid}: "
             f"Updating glfw swap interval to {swap_interval}."
             )
         glfw.swap_interval(swap_interval) # type: ignore
+
+    # Getter
+    @property
+    def uuid(self):
+        """
+        Returns the window uuid.
+        """
+        return self._uuid
+
+    def _close(self) -> None:
+        """
+        [Private]
+        Close the GLFW window and terminate glfw.
+        """
+        log.info("Closing window...")
+        glfw.destroy_window(self._window) # type: ignore
+        glfw.terminate()
+        log.info("Window closed.")
+        sys.exit(0)
